@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { Button } from './styled/button';
+import { useWalletConnection } from './hooks/walletconnect';
 
 function App() {
+  const { provider, wallet } = useWalletConnection()
   return (
     <div className="App">
       <header className="App-header">

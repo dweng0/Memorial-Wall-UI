@@ -1,20 +1,11 @@
 
 import { init } from '@web3-onboard/react'
 import injectedModule from '@web3-onboard/injected-wallets'
-import trezorModule from '@web3-onboard/trezor'
-import ledgerModule from '@web3-onboard/ledger'
+
 import walletConnectModule from '@web3-onboard/walletconnect'
 import coinbaseModule from '@web3-onboard/coinbase'
-import portisModule from '@web3-onboard/portis'
-import magicModule from '@web3-onboard/magic'
 import fortmaticModule from '@web3-onboard/fortmatic'
-import torusModule from '@web3-onboard/torus'
-import keepkeyModule from '@web3-onboard/keepkey'
-import gnosisModule from '@web3-onboard/gnosis'
-import web3authModule from '@web3-onboard/web3auth'
-import sequenceModule from '@web3-onboard/sequence'
 import tallyModule from '@web3-onboard/tallyho'
-import gas from '@web3-onboard/gas'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -28,19 +19,6 @@ const injected = injectedModule()
 const coinbase = coinbaseModule()
 const walletConnect = walletConnectModule()
 
-const portis = portisModule({
-  apiKey: 'b2b7586f-2b1e-4c30-a7fb-c2d1533b153b'
-})
-
-const fortmatic = fortmaticModule({
-  apiKey: 'pk_test_886ADCAB855632AA'
-})
-
-const torus = torusModule()
-const ledger = ledgerModule()
-const keepkey = keepkeyModule()
-const gnosis = gnosisModule()
-const sequence = sequenceModule()
 const tally = tallyModule()
 
 
@@ -48,15 +26,8 @@ export const initWeb3Onboard = init({
   wallets: [
     injected,
     tally,
-    ledger,
     coinbase,
-    walletConnect,
-    gnosis,
-    fortmatic,
-    keepkey,
-    portis,
-    torus,
-    sequence
+    walletConnect
   ],
   chains: [
     {
@@ -114,12 +85,4 @@ export const initWeb3Onboard = init({
       }
     }
   }
-})
-
-// subscribe to a single chain for estimates using the default poll rate of 5 secs
-// API key is optional and if provided allows for faster poll rates
-export const ethMainnetGasBlockPrices = gas.stream({
-  chains: ['0x1'],
-  // apiKey: dappId,
-  endpoint: 'blockPrices'
 })
