@@ -7,8 +7,27 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "styled-components": "^5.3.6",
     "typescript": "^4.8.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@web3-onboard/coinbase": "^2.1.3",
+    "@web3-onboard/dcent": "^2.2.2",
+    "@web3-onboard/fortmatic": "^2.0.14",
+    "@web3-onboard/gas": "^2.1.3",
+    "@web3-onboard/gnosis": "^2.1.3",
+    "@web3-onboard/injected-wallets": "^2.3.0",
+    "@web3-onboard/keepkey": "^2.3.2",
+    "@web3-onboard/keystone": "^2.3.2",
+    "@web3-onboard/ledger": "^2.3.2",
+    "@web3-onboard/magic": "^2.1.3",
+    "@web3-onboard/portis": "^2.1.3",
+    "@web3-onboard/react": "^2.4.0",
+    "@web3-onboard/sequence": "^2.0.2",
+    "@web3-onboard/tallyho": "^2.0.1",
+    "@web3-onboard/torus": "^2.1.3",
+    "@web3-onboard/trezor": "^2.3.2",
+    "@web3-onboard/walletconnect": "^2.1.3",
+    "@web3-onboard/web3auth": "^2.1.3"
   },
   "scripts": {
     "preinstall": "typechain --target=ethers-v5 --out-dir=src/types/contracts src/contracts/*.json",
@@ -44,6 +63,7 @@
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@types/styled-components": "^5.1.26",
     "typechain": "^8.1.0"
   }
 }
