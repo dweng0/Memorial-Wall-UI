@@ -3,7 +3,7 @@ import './App.css';
 import { useWalletConnection } from './hooks/walletconnect';
 
 function App() {
-  const { provider, wallet } = useWalletConnection()
+  const { provider, wallet, connecting, disconnect, connect } = useWalletConnection()
   return (
     <div className="App">
       <header className="App-header">
@@ -12,6 +12,11 @@ function App() {
       <div>
         List of memories
       </div>
+      <div>
+      <button disabled={connecting} onClick={() => (wallet ? disconnect(wallet) : connect())}>
+        {connecting ? 'connecting' : wallet ? 'disconnect' : 'connect'}
+      </button>
+    </div>
     </div>
   );
 }

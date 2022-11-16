@@ -6,10 +6,10 @@ import walletConnectModule from '@web3-onboard/walletconnect'
 import coinbaseModule from '@web3-onboard/coinbase'
 import fortmaticModule from '@web3-onboard/fortmatic'
 import tallyModule from '@web3-onboard/tallyho'
-import * as dotenv from 'dotenv'
-dotenv.config()
+// import * as dotenv from 'dotenv'
+// dotenv.config()
 
-const INFURA_ID = process.env.INFURA_ID
+const INFURA_ID = "12313123124123"
 
 export const infuraRPC = `https://mainnet.infura.io/v3/${INFURA_ID}`
 
