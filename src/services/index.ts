@@ -64,10 +64,10 @@ export const initWeb3Onboard = init({
     desktop: {
       position: 'topRight',
       enabled: true,
-      minimal: false
+      minimal: true
     },
     mobile: {
-        enabled: false
+        enabled: true
     }
   },
   notify: {

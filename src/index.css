@@ -1,0 +1,16 @@
+html { 
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: #282c34;
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: rgb(220, 217, 240);
+}

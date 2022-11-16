@@ -1,21 +1,25 @@
 import React from 'react';
-import './App.css';
+
+import Button from './components/button/button';
 import { useWalletConnection } from './hooks/walletconnect';
+import { MemwallAbi, MemwallAbi__factory } from './types/contracts';
+const DEPLOYED_CONTRACT_ADDRESS = '0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd';
 
 function App() {
-  const { provider, wallet, connecting, disconnect, connect } = useWalletConnection()
+
+  const { provider, wallet, connecting} = useWalletConnection()
+  const [memwall, setMemwall] = React.useState<MemwallAbi | null>(null);
+
+  React.useEffect(() => {
+    if(!provider) return;
+    setMemwall(MemwallAbi__factory.connect(DEPLOYED_CONTRACT_ADDRESS, provider));
+  }, [connecting, provider, wallet]);
+
   return (
     <div className="App">
-      <header className="App-header">
-       <h1>Memorial Wall</h1>
-      </header>
+      <p>TODO stuff</p>
       <div>
-        List of memories
-      </div>
-      <div>
-      <button disabled={connecting} onClick={() => (wallet ? disconnect(wallet) : connect())}>
-        {connecting ? 'connecting' : wallet ? 'disconnect' : 'connect'}
-      </button>
+      <Button/>
     </div>
     </div>
   );
