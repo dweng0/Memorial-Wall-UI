@@ -40,9 +40,6 @@ function App() {
     })
   }, [connecting, provider, wallet]);
 
-
-  //setup contextual data
-
   React.useEffect(() => {
     if(!memwall) return;
     if(!wallet) {
