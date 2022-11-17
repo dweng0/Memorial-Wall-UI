@@ -3,7 +3,7 @@ import React from 'react'
 import { useWalletConnection } from '../../hooks/walletconnect';
 import { StyledButton, StyledButtonWrapper } from './styled';
 
-const DEPLOYED_NETWORK_ID = '0x5';
+export const DEPLOYED_NETWORK_ID = '0x5';
 
 /**
  * Types for the different button states

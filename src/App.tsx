@@ -2,7 +2,7 @@ import useViewportSpy from 'beautiful-react-hooks/useViewportSpy';
 import React from 'react';
 import styled from 'styled-components';
 
-import Button from './components/button/button';
+import Button, { DEPLOYED_NETWORK_ID } from './components/button/button';
 import { useVisibility } from './hooks/useVisibility';
 import { useWalletConnection } from './hooks/walletconnect';
 import { MemwallAbi, MemwallAbi__factory } from './types/contracts';
@@ -48,7 +48,7 @@ height: 200px;
 
 function App() {
   const [ref, left, top, right, bottom, intersecting]  = useVisibility();
-  const { provider, wallet, connecting} = useWalletConnection()
+  const { provider, wallet, connecting, connectedChain} = useWalletConnection()
   const [memwall, setMemwall] = React.useState<MemwallAbi | null>(null);
   const [memories, setMemories] = React.useState<MemorialWall.MemoryMessageStructOutput[]>([]);
   
@@ -59,7 +59,7 @@ function App() {
     if(!provider) return;
     setLoading(true);
     setMemwall(MemwallAbi__factory.connect(DEPLOYED_CONTRACT_ADDRESS, provider));
-
+    debugger
     memwall?.getMemories().then((memories) => {
       setMemories(memories);
       console.log('got memories')
@@ -70,6 +70,7 @@ function App() {
     })
     .finally(() => {
       setLoading(false);
+      console.log('2')
     })
   }, [connecting, provider, wallet]);
 
@@ -80,19 +81,45 @@ function App() {
     }
   }, [top, loading])
 
+  const renderWall = () => { 
+    
+    if(memories.length > 0) {
+      return <MemorialWallWrapper>
+        {memories.map((memory) => {
+          return <p>{memory.message}</p>
+        })}
+      </MemorialWallWrapper>
+    }
+
+    if(connectedChain?.id !== DEPLOYED_NETWORK_ID) {
+      return <p>Please connect to the correct network</p>
+    }
+
+    if(loading) {
+      return <p>Loading...</p>
+    }
+
+    if(errorMessage) {
+      return <p>{errorMessage}</p>
+    }
+
+    if(memories.length === 0) {
+      return <p>No memories yet</p>
+    }
+  }
+
   return (
     <div className="App">
       <StyledWrapper>
         <Splash>
         <div>
-          <span>memory wall visible? {top}</span>
           <FirstText>Memory Wall.</FirstText>
           <SecondText>A place to leave messages</SecondText>
           <ThirdText>for loved ones</ThirdText>
         </div>
         </Splash>
         <MemorialWallWrapper ref={ref}>
-
+          {renderWall()}
         </MemorialWallWrapper>
       </StyledWrapper>
       <Button/>
