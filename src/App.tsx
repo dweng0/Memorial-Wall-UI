@@ -3,55 +3,21 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Button, { DEPLOYED_NETWORK_ID } from './components/button/button';
+import { MessageForm } from './components/messageform';
 import { useVisibility } from './hooks/useVisibility';
 import { useWalletConnection } from './hooks/walletconnect';
+import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, ThirdText } from './styled';
 import { MemwallAbi, MemwallAbi__factory } from './types/contracts';
 import { MemorialWall } from './types/contracts/MemwallAbi';
 const DEPLOYED_CONTRACT_ADDRESS = '0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd';
 
-export const StyledWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
-
-export const FirstText = styled.p`
-  animation: text-focus-in 0.3s cubic-bezier(0.550, 0.085, 0.680, 0.530) 0.5s both;
-`
-
-
-export const SecondText = styled.p`
-  animation: text-focus-in 0.3s cubic-bezier(0.550, 0.085, 0.680, 0.530) 0.7s both;
-  s both;
-`
-
-
-export const ThirdText = styled.p`
-  animation: text-focus-in 0.3s cubic-bezier(0.550, 0.085, 0.680, 0.530) 0.8s backwards;
-`
-
-export const Splash = styled.div`
-width: 100vw;
-height: 100vh;
-display: flex;
-overflow: hidden;
-text-align: center;
-justify-content: center;
-flex-direction: column;
-`
-
-export const MemorialWallWrapper = styled.div`
-margin-top: 20px;
-height: 200px;
-`
-
 function App() {
+  
   const [ref, left, top, right, bottom, intersecting]  = useVisibility();
   const { provider, wallet, connecting, connectedChain} = useWalletConnection()
   const [memwall, setMemwall] = React.useState<MemwallAbi | null>(null);
   const [memories, setMemories] = React.useState<MemorialWall.MemoryMessageStructOutput[]>([]);
-  
+  const [contextualText, setContextualText] = React.useState<string>('');
   const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   
@@ -74,38 +40,34 @@ function App() {
     })
   }, [connecting, provider, wallet]);
 
+
+  //setup contextual data
+
   React.useEffect(() => {
-    //check if top is visible
-    if(intersecting && loading) {
-
+    if(!memwall) return;
+    if(!wallet) {
+      setContextualText('Connect your wallet to leave a message');
+    } else if (connectedChain?.id !== DEPLOYED_NETWORK_ID) {
+      setContextualText('Switch to the Goerli network to leave a message');
+    } else if (memories.length === 0) {
+      setContextualText('Leave a message');
+    } else { 
+      setContextualText('Leave another message');
     }
-  }, [top, loading])
-
-  const renderWall = () => { 
     
-    if(memories.length > 0) {
-      return <MemorialWallWrapper>
-        {memories.map((memory) => {
-          return <p>{memory.message}</p>
-        })}
-      </MemorialWallWrapper>
-    }
+  }, [loading, connectedChain, errorMessage, memories, wallet])
 
-    if(connectedChain?.id !== DEPLOYED_NETWORK_ID) {
-      return <p>Please connect to the correct network</p>
-    }
-
-    if(loading) {
-      return <p>Loading...</p>
-    }
-
-    if(errorMessage) {
-      return <p>{errorMessage}</p>
-    }
-
-    if(memories.length === 0) {
-      return <p>No memories yet</p>
-    }
+  const submit = (name: string, message: string) => { 
+    if(!memwall) return;
+    memwall.addMemory(name, message, '')
+    .then((tx) => {
+      console.log(tx)
+      setContextualText('Your memory has been added to the wall. It will appear on the wall once it has been mined.')
+    })
+    .catch((err) => {
+      console.error(err)
+      setContextualText('Failed to add memory to the wall')
+    })
   }
 
   return (
@@ -115,16 +77,21 @@ function App() {
         <div>
           <FirstText>Memory Wall.</FirstText>
           <SecondText>A place to leave messages</SecondText>
-          <ThirdText>for loved ones</ThirdText>
+          <ThirdText>for loved ones</ThirdText>         
         </div>
-        </Splash>
+        <ThirdText>{contextualText}</ThirdText>
+        </Splash>        
         <MemorialWallWrapper ref={ref}>
-          {renderWall()}
+        {memories.map((memory) => {
+          return <p>{memory.message}</p>
+        })}
         </MemorialWallWrapper>
       </StyledWrapper>
+      { !errorMessage && connectedChain?.id === DEPLOYED_NETWORK_ID && wallet && <MessageForm onSubmit={submit}/>}
       <Button/>
     </div>
   );
 }
+
 
 export default App;
