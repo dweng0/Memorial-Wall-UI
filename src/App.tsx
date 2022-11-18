@@ -1,72 +1,65 @@
-import useViewportSpy from 'beautiful-react-hooks/useViewportSpy';
+
 import React from 'react';
 import styled from 'styled-components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Button, { DEPLOYED_NETWORK_ID } from './components/button/button';
 import { MessageForm } from './components/messageform';
+import { useMemoriesHook } from './hooks/use-memories-hook';
 import { useVisibility } from './hooks/useVisibility';
 import { useWalletConnection } from './hooks/walletconnect';
 import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, ThirdText } from './styled';
-import { MemwallAbi, MemwallAbi__factory } from './types/contracts';
-import { MemorialWall } from './types/contracts/MemwallAbi';
-const DEPLOYED_CONTRACT_ADDRESS = '0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd';
 
 function App() {
   
   const [ref, left, top, right, bottom, intersecting]  = useVisibility();
   const { provider, wallet, connecting, connectedChain} = useWalletConnection()
-  const [memwall, setMemwall] = React.useState<MemwallAbi | null>(null);
-  const [memories, setMemories] = React.useState<MemorialWall.MemoryMessageStructOutput[]>([]);
+  const {memories, setMemory, loading, carvingOnToWall, setProvider} = useMemoriesHook()
   const [contextualText, setContextualText] = React.useState<string>('');
-  const [loading, setLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
   
   React.useEffect(() => {
-    if(!provider) return;
-    setLoading(true);
-    setMemwall(MemwallAbi__factory.connect(DEPLOYED_CONTRACT_ADDRESS, provider));
-    debugger
-    memwall?.getMemories().then((memories) => {
-      setMemories(memories);
-      console.log('got memories')
-    })
-    .catch((err) => {
-      setErrorMessage('Failed to get Memories');
-      console.error(err)
-    })
-    .finally(() => {
-      setLoading(false);
-      console.log('2')
-    })
-  }, [connecting, provider, wallet]);
+    if(provider) { 
+      console.log('setting provider')
+      setProvider(provider)
+    }
+   }, [provider, wallet, connecting])
 
   React.useEffect(() => {
-    if(!memwall) return;
-    if(!wallet) {
+      setCanSubmit(false)
+    if(!provider) {
+      setContextualText('Connect your wallet to see the wall')
+    } else if (!wallet) {
       setContextualText('Connect your wallet to leave a message');
     } else if (connectedChain?.id !== DEPLOYED_NETWORK_ID) {
       setContextualText('Switch to the Goerli network to leave a message');
     } else if (memories.length === 0) {
+      setCanSubmit(true)
       setContextualText('Leave a message');
     } else { 
+      setCanSubmit(true)
       setContextualText('Leave another message');
     }
     
-  }, [loading, connectedChain, errorMessage, memories, wallet])
+  }, [loading, connectedChain, memories, wallet, provider])
 
-  const submit = (name: string, message: string) => { 
-    if(!memwall) return;
-    memwall.addMemory(name, message, '')
-    .then((tx) => {
-      console.log(tx)
-      setContextualText('Your memory has been added to the wall. It will appear on the wall once it has been mined.')
-    })
-    .catch((err) => {
-      console.error(err)
-      setContextualText('Failed to add memory to the wall')
-    })
+  const submit = (name: string, message: string, donation: string) => { 
+    if(!canSubmit) {
+      toast(contextualText)
+      return
+    }
+
+    /**
+     * Error boundary
+     */
+    if(!name || !message || !donation) {
+      toast('Please fill out all fields');
+      return
+    }
+    setMemory(name, message, donation)
+    
   }
-
   return (
     <div className="App">
       <StyledWrapper>
@@ -84,8 +77,9 @@ function App() {
         })}
         </MemorialWallWrapper>
       </StyledWrapper>
-      { !errorMessage && connectedChain?.id === DEPLOYED_NETWORK_ID && wallet && <MessageForm onSubmit={submit}/>}
+      {canSubmit && connectedChain?.id === DEPLOYED_NETWORK_ID && wallet && <MessageForm onSubmit={submit}/>}
       <Button/>
+      <ToastContainer />
     </div>
   );
 }
