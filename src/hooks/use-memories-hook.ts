@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useContractInterface as contractInterface } from "./use-contract-interface";
 import { MemwallAbi, MemwallAbi__factory } from "../types/contracts";
 import { MemorialWall } from "../types/contracts/MemwallAbi";
-import { toast } from "react-toastify";
 const MEMORIAL_WALL_ADDRESS = "0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd";
 
 interface MemoriesHook {
