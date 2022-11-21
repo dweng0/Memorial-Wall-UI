@@ -29,15 +29,19 @@ export const useMemoriesHook = (): MemoriesHook => {
   const [error, setError] = React.useState<string>("");
   const [carvingOnToWall, setCarvingOnToWall] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
+  const [signer, setSigner] = React.useState<ethers.Signer>();
   
   useEffect(() => { 
     if(!provider) return;
+    const signer = provider.getSigner();
     const contract = contractInterface<MemwallAbi>(
       MEMORIAL_WALL_ADDRESS,
-      provider,
+      signer,
       MemwallAbi__factory
     );
+    contract.connect(provider.getSigner());
     setContract(contract);
+    setSigner(signer);
   }, [provider])
 
   const providerCheck = () => { 
@@ -47,6 +51,7 @@ export const useMemoriesHook = (): MemoriesHook => {
   }
 
   const setMemory = async (message: string, name: string, donation: string) => {
+    console.log('adding memory');
     providerCheck();
     if (!contract) {
       throw new Error("Contract not found");
@@ -55,11 +60,13 @@ export const useMemoriesHook = (): MemoriesHook => {
     if (isNaN(Number(donation)) || Number(donation) <= 0) {
       throw new Error("Please donate to the wall");
     }
+    debugger;
 
     try {
       setLoading(true);
       const tx = await contract.addMemory(message, name, "", {
         value: ethers.utils.parseEther(donation),
+        
       });
       setCarvingOnToWall(true);
       await tx.wait();

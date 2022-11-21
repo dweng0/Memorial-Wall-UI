@@ -12,7 +12,7 @@ export const MessageForm: React.FC<MessageFormProps> = ({onSubmit}) => {
     const [donation, setDonation] = React.useState('');
 
     const handleSubmit = () => {
-
+        console.log('handle donation')
         /**
          * Error boundary
          */

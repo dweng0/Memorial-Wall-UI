@@ -1,21 +1,21 @@
-import { BaseContract, providers } from 'ethers'
+import { BaseContract, providers, Signer } from 'ethers'
 
 export const useContractInterface = <T ,> (
     contractAddress: string, 
-    provider: providers.Web3Provider,
-    Factory: {connect: (address: string, provider: providers.Web3Provider) => BaseContract}
+    signer: Signer,
+    Factory: {connect: (address: string, signer: Signer) => BaseContract}
     ) => {
 
 /**
  * Error boundary
  * @returns 
  */
-if(!contractAddress || !provider || !Factory) {
-    throw new Error('Missing contract address, provider, ABI, or Factory')
+if(!contractAddress || !signer || !Factory) {
+    throw new Error('Missing contract address, signer, ABI, or Factory')
 }
  
     const buildContract = (): T => {
-        const contract = Factory.connect(contractAddress, provider)
+        const contract = Factory.connect(contractAddress, signer)
         return contract as T
     }
 
