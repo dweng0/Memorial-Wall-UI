@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useContractInterface as contractInterface } from "./use-contract-interface";
 import { MemwallAbi, MemwallAbi__factory } from "../types/contracts";
 import { MemorialWall } from "../types/contracts/MemwallAbi";
+import { toast } from "react-toastify";
 const MEMORIAL_WALL_ADDRESS = "0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd";
 
 interface MemoriesHook {
@@ -29,8 +30,7 @@ export const useMemoriesHook = (): MemoriesHook => {
   const [error, setError] = React.useState<string>("");
   const [carvingOnToWall, setCarvingOnToWall] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
-  const [signer, setSigner] = React.useState<ethers.Signer>();
-  
+    
   useEffect(() => { 
     if(!provider) return;
     const signer = provider.getSigner();
@@ -41,7 +41,6 @@ export const useMemoriesHook = (): MemoriesHook => {
     );
     contract.connect(provider.getSigner());
     setContract(contract);
-    setSigner(signer);
   }, [provider])
 
   const providerCheck = () => { 
@@ -60,8 +59,7 @@ export const useMemoriesHook = (): MemoriesHook => {
     if (isNaN(Number(donation)) || Number(donation) <= 0) {
       throw new Error("Please donate to the wall");
     }
-    debugger;
-
+    
     try {
       setLoading(true);
       const tx = await contract.addMemory(message, name, "", {

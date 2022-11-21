@@ -1,4 +1,4 @@
-import { BaseContract, providers, Signer } from 'ethers'
+import { BaseContract, Signer } from 'ethers'
 
 export const useContractInterface = <T ,> (
     contractAddress: string, 

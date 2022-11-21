@@ -13,7 +13,7 @@ import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, Thir
 function App() {
   const {ref}  = useVisibility();
   const { provider, wallet, connecting, connectedChain} = useWalletConnection()
-  const {memories, setMemory, loading, setProvider} = useMemoriesHook()
+  const {memories, setMemory, loading, setProvider, carvingOnToWall} = useMemoriesHook()
   const [contextualText, setContextualText] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
   
@@ -25,14 +25,21 @@ function App() {
    }, [provider, wallet, connecting, setProvider])
 
   React.useEffect(() => {
-      setCanSubmit(false)
+    console.log('did carving change?', carvingOnToWall)
+
+    setCanSubmit(false)
     if(!provider) {
       setContextualText('Connect your wallet to see the wall')
     } else if (!wallet) {
       setContextualText('Connect your wallet to leave a message');
     } else if (connectedChain?.id !== DEPLOYED_NETWORK_ID) {
       setContextualText('Switch to the Goerli network to leave a message');
-    } else if (memories.length === 0) {
+    } else if(carvingOnToWall === true) {
+      setContextualText('Carving your message on the wall');
+      toast('Carving your message on the wall', {autoClose: 1500})
+      setCanSubmit(false)
+    } 
+    else if (memories.length === 0) {
       setCanSubmit(true)
       setContextualText('Leave a message');
     } else { 
@@ -40,7 +47,7 @@ function App() {
       setContextualText('Leave another message');
     }
     
-  }, [loading, connectedChain, memories, wallet, provider])
+  }, [loading, connectedChain, memories, wallet, provider, carvingOnToWall])
 
   const submit = (name: string, message: string, donation: string) => { 
     if(!canSubmit) {
