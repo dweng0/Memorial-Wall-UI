@@ -1,17 +1,18 @@
 import React from 'react'
 
 /**
- * Flag bounds for left, top, right, bottom
- * @returns
+ * Flag bounds for left, top, right, bottom (like css margins/paddings)
+ * @example const {ref, left} = useVisibility() //pass the ref into the element you want to check and put a use effect on the flag/s
+ * @returns true for any of the flags that are intersecting
  */
-export const useVisibility = (): [
-  React.RefCallback<Element>,
-  boolean,
-  boolean,
-  boolean,
-  boolean,
-  boolean,
-] => {
+export const useVisibility = (): {
+ref:  React.RefCallback<Element>,
+  top:boolean,
+  right:boolean,
+  bottom:boolean,
+  left:boolean,
+  intersecting:boolean,
+} => {
 
   const [outOfBoundsLeft, setOutOfBoundsLeft] = React.useState(false)
   const [outOfBoundsRight, setOutOfBoundsRight] = React.useState(false)
@@ -42,6 +43,9 @@ export const useVisibility = (): [
     [setIntersecting, setOutOfBoundsBottom, setOutOfBoundsTop, setOutOfBoundsLeft, setOutOfBoundsRight],
   )
 
+  /**
+   * Only connect to the observer if the element exists, ptherwise, disconnect and reset bounds
+   */
   const currentElement = React.useCallback(
     (ele: Element | null) => {
       if (ele) {
@@ -53,5 +57,13 @@ export const useVisibility = (): [
     },
     [observer],
   )
-  return [currentElement, outOfBoundsLeft, outOfBoundsTop, outOfBoundsRight, outOfBoundsBottom, intersecting]
+
+  return { 
+  ref: currentElement,
+  left: outOfBoundsLeft,
+  right: outOfBoundsRight,
+  top: outOfBoundsTop,
+  bottom: outOfBoundsBottom,
+  intersecting
+  }
 }

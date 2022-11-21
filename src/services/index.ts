@@ -4,16 +4,11 @@ import injectedModule from '@web3-onboard/injected-wallets'
 
 import walletConnectModule from '@web3-onboard/walletconnect'
 import coinbaseModule from '@web3-onboard/coinbase'
-import fortmaticModule from '@web3-onboard/fortmatic'
 import tallyModule from '@web3-onboard/tallyho'
-// import * as dotenv from 'dotenv'
-// dotenv.config()
 
 const INFURA_ID = process.env.REACT_APP_INFURA
 
 export const infuraRPC = `https://mainnet.infura.io/v3/${INFURA_ID}`
-
-const dappId = '1730eff0-9d50-4382-a3fe-89f0d34a2070'
 
 const injected = injectedModule()
 const coinbase = coinbaseModule()

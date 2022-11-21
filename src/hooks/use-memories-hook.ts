@@ -11,6 +11,7 @@ interface MemoriesHook {
   carvingOnToWall: boolean /** mining  */;
   memories: MemorialWall.MemoryMessageStructOutput[];
   setMemory: (message: string, name: string, donation: string) => Promise<void>;
+  getMemories: () => Promise<void>;
   setProvider: (provider: ethers.providers.Web3Provider) => void;
 }
 
@@ -26,7 +27,6 @@ export const useMemoriesHook = (): MemoriesHook => {
   >([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [allowance, setAllowance] = React.useState<number>(0);
   const [carvingOnToWall, setCarvingOnToWall] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
   
@@ -88,6 +88,7 @@ export const useMemoriesHook = (): MemoriesHook => {
     error,
     carvingOnToWall,
     setMemory,
+    getMemories,
     setProvider
   };
 };

@@ -1,4 +1,4 @@
-import { ConnectOptions, DisconnectOptions } from '@web3-onboard/core/dist/types';
+import { DisconnectOptions } from '@web3-onboard/core/dist/types';
 import React from 'react'
 import { useWalletConnection } from '../../hooks/walletconnect';
 import { StyledButton, StyledButtonWrapper } from './styled';

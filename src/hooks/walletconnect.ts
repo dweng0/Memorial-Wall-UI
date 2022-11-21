@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { init, useAccountCenter, useConnectWallet, useSetChain } from '@web3-onboard/react'
+import { useAccountCenter, useConnectWallet, useSetChain } from '@web3-onboard/react'
 import { initWeb3Onboard } from "../services";
 import { OnboardAPI } from "@web3-onboard/core";
 import { ethers } from "ethers";
@@ -21,7 +21,7 @@ export const useWalletConnection = () => {
   useEffect(() => {
     setOnboarded(initWeb3Onboard)
     updateAccountCenter({position: 'topRight', enabled: true, minimal: true})
-  }, [])
+  }, [updateAccountCenter, setOnboarded])
 
   useEffect(() => {
       let ethersProvider
@@ -30,7 +30,7 @@ export const useWalletConnection = () => {
         ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any')
         setProvider(ethersProvider)
       }
-   }, [wallet])
+   }, [wallet, onboarded, setProvider])
 
   return { 
     connectedChain,

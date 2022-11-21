@@ -1,6 +1,5 @@
 
 import React from 'react';
-import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,9 +11,9 @@ import { useWalletConnection } from './hooks/walletconnect';
 import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, ThirdText } from './styled';
 
 function App() {
-  const [ref, left, top, right, bottom, intersecting]  = useVisibility();
+  const {ref}  = useVisibility();
   const { provider, wallet, connecting, connectedChain} = useWalletConnection()
-  const {memories, setMemory, loading, carvingOnToWall, setProvider} = useMemoriesHook()
+  const {memories, setMemory, loading, setProvider} = useMemoriesHook()
   const [contextualText, setContextualText] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
   
@@ -23,7 +22,7 @@ function App() {
       console.log('setting provider')
       setProvider(provider)
     }
-   }, [provider, wallet, connecting])
+   }, [provider, wallet, connecting, setProvider])
 
   React.useEffect(() => {
       setCanSubmit(false)
