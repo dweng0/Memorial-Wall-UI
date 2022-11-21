@@ -40,20 +40,13 @@ export const initWeb3Onboard = init({
   ],
   appMetadata: {
     name: 'Memorial Wall',
-    icon: 'https://memorialwall.io/favicon.ico',
-    logo: 'https://memorialwall.io/favicon.ico',
+    icon: '/favicon.ico',
+    logo: '/favicon.ico',
     description: 'Connect to a wallet to get started',
     recommendedInjectedWallets: [
       { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
       { name: 'MetaMask', url: 'https://metamask.io' }
     ],
-    agreement: {
-      version: '1.0.0',
-      termsUrl: 'https://www.blocknative.com/terms-conditions',
-      privacyUrl: 'https://www.blocknative.com/privacy-policy'
-    },
-    gettingStartedGuide: 'https://blocknative.com',
-    explore: 'https://blocknative.com'
   },
   accountCenter: {
     desktop: {
