@@ -29,16 +29,22 @@ export const useMemoriesHook = (): MemoriesHook => {
   const [error, setError] = React.useState<string>("");
   const [carvingOnToWall, setCarvingOnToWall] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
+
+  const getContract = (signerOrProvider: string | ethers.providers.Provider | ethers.Signer) => { 
+      if(!signerOrProvider) return;
+      const contract = contractInterface<MemwallAbi>(
+        MEMORIAL_WALL_ADDRESS,
+        signerOrProvider as ethers.Signer | ethers.providers.Provider, 
+        MemwallAbi__factory
+      );
+      contract.connect(signerOrProvider);
+      return contract;
+  }
     
   useEffect(() => { 
     if(!provider) return;
     const signer = provider.getSigner();
-    const contract = contractInterface<MemwallAbi>(
-      MEMORIAL_WALL_ADDRESS,
-      signer,
-      MemwallAbi__factory
-    );
-    contract.connect(provider.getSigner());
+    const contract = getContract(signer);
     setContract(contract);
   }, [provider])
 
@@ -63,7 +69,7 @@ export const useMemoriesHook = (): MemoriesHook => {
     if (isNaN(Number(donation)) || Number(donation) <= 0) {
       throw new Error("Please donate to the wall");
     }
-    
+    console.log('here');
     try {    
       const tx = await contract.addMemory(message, name, "", {
         value: ethers.utils.parseEther(donation),
@@ -82,10 +88,14 @@ export const useMemoriesHook = (): MemoriesHook => {
   };
 
   const getMemories = async () => {
-    providerCheck();
+    console.log('fetching memories')
+    let localProvider = provider;
     try {
-      setLoading(true);
-      setMemories((await contract?.getMemories()) || []);
+      setLoading(true); 
+      if(!localProvider) { 
+        localProvider = new ethers.providers.Web3Provider(window.ethereum);
+      }
+      setMemories((await getContract(localProvider)?.getMemories()) || []);
       setLoading(false);
     } catch (error: any) {
       setError(error.message);
@@ -93,6 +103,9 @@ export const useMemoriesHook = (): MemoriesHook => {
     }
   };
 
+  useEffect(() => { 
+    getMemories();
+  }, [])
   return {
     memories,
     loading,

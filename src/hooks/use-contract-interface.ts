@@ -1,9 +1,9 @@
-import { BaseContract, Signer } from 'ethers'
+import { BaseContract, Signer, providers } from 'ethers'
 
 export const useContractInterface = <T ,> (
     contractAddress: string, 
-    signer: Signer,
-    Factory: {connect: (address: string, signer: Signer) => BaseContract}
+    signer: Signer | providers.Provider,
+    Factory: {connect: (address: string, signer: Signer | providers.Provider) => BaseContract}
     ) => {
 
 /**

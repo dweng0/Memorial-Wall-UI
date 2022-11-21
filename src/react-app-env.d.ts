@@ -2,6 +2,14 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
+import { ExternalProvider } from "@ethersproject/providers";
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV: 'development' | 'production' | 'test';

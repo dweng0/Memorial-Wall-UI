@@ -25,7 +25,6 @@ export const Splash = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  overflow: hidden;
   text-align: center;
   justify-content: center;
   flex-direction: column;
@@ -33,7 +32,12 @@ export const Splash = styled.div`
 
 export const MemorialWallWrapper = styled.div`
   margin-top: 20px;
-  height: 200px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;  
 `;
 
 export const FormWrapper = styled.div`
