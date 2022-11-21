@@ -9,7 +9,7 @@ import tallyModule from '@web3-onboard/tallyho'
 // import * as dotenv from 'dotenv'
 // dotenv.config()
 
-const INFURA_ID = "12313123124123"
+const INFURA_ID = process.env.REACT_APP_INFURA
 
 export const infuraRPC = `https://mainnet.infura.io/v3/${INFURA_ID}`
 
