@@ -48,8 +48,13 @@ export const useMemoriesHook = (): MemoriesHook => {
     }
   }
 
+  /**
+   * Write the memory to the blockchain. Re fetches the memories after the transaction is mined
+   * @param message 
+   * @param name 
+   * @param donation 
+   */
   const setMemory = async (message: string, name: string, donation: string) => {
-    console.log('adding memory');
     providerCheck();
     if (!contract) {
       throw new Error("Contract not found");
@@ -59,21 +64,23 @@ export const useMemoriesHook = (): MemoriesHook => {
       throw new Error("Please donate to the wall");
     }
     
-    try {
-      setLoading(true);
+    try {    
       const tx = await contract.addMemory(message, name, "", {
         value: ethers.utils.parseEther(donation),
         
       });
+      setLoading(true);
       setCarvingOnToWall(true);
       await tx.wait();
       setCarvingOnToWall(false);
       setLoading(false);
+      getMemories();
     } catch (error: any) {
       setLoading(false);
       setError(error.message);
     }
   };
+
   const getMemories = async () => {
     providerCheck();
     try {

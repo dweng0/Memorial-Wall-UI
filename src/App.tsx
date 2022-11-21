@@ -65,6 +65,14 @@ function App() {
     setMemory(name, message, donation)
     
   }
+
+  const showLoading = () => { 
+    const text = contextualText || 'Loading...';
+    if(true) {
+      return <div><span className="loader loader-circles"></span> {text}</div>
+    }
+  }
+  
   return (
     <div className="App">
       <StyledWrapper>
@@ -74,14 +82,15 @@ function App() {
           <SecondText>A place to leave messages</SecondText>
           <ThirdText>for loved ones</ThirdText>         
         </div>
-        <ThirdText>{contextualText}</ThirdText>
+        
+        {loading ? showLoading() : <ThirdText>{contextualText}</ThirdText>}
         </Splash>        
         <MemorialWallWrapper ref={ref}>
         {memories.map((memory) => {
           return <p>{memory.message}</p>
         })}
         </MemorialWallWrapper>
-      </StyledWrapper>
+      </StyledWrapper>    
       {canSubmit && connectedChain?.id === DEPLOYED_NETWORK_ID && wallet && <MessageForm onSubmit={submit}/>}
       <Button/>
       <ToastContainer />
