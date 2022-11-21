@@ -35,8 +35,8 @@ function App() {
     } else if (connectedChain?.id !== DEPLOYED_NETWORK_ID) {
       setContextualText('Switch to the Goerli network to leave a message');
     } else if(carvingOnToWall === true) {
-      setContextualText('Carving your message on the wall');
-      toast('Carving your message on the wall', {autoClose: 1500})
+      setContextualText('Carving your message on the wall...');
+      toast('Request sent', {autoClose: 1500})
       setCanSubmit(false)
     } 
     else if (memories.length === 0) {
