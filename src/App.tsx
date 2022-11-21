@@ -12,7 +12,6 @@ import { useWalletConnection } from './hooks/walletconnect';
 import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, ThirdText } from './styled';
 
 function App() {
-  
   const [ref, left, top, right, bottom, intersecting]  = useVisibility();
   const { provider, wallet, connecting, connectedChain} = useWalletConnection()
   const {memories, setMemory, loading, carvingOnToWall, setProvider} = useMemoriesHook()
