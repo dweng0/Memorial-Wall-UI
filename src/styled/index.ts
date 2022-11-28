@@ -8,6 +8,8 @@ export const StyledWrapper = styled.div`
 `;
 
 export const FirstText = styled.p`
+  font-size: 2.5rem;
+  font-weight: 700;
   animation: text-focus-in 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) 0.5s both;
 `;
 

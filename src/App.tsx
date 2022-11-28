@@ -56,7 +56,7 @@ function App() {
       setProvider(provider)
       getMemories()
     }
-   }, [provider, wallet, connecting, setProvider])
+   }, [provider, wallet, connecting, setProvider, getMemories])
 
   React.useEffect(() => {
     console.log('did carving change?', carvingOnToWall)

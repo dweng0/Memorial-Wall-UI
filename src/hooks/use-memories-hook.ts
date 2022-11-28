@@ -105,7 +105,7 @@ export const useMemoriesHook = (): MemoriesHook => {
 
   useEffect(() => { 
     getMemories();
-  }, [])
+  }, [getMemories])
   return {
     memories,
     loading,
