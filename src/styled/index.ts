@@ -39,7 +39,9 @@ export const MemorialWallWrapper = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 20px;  
+  gap: 20px;
+  width: 90%;
+  margin: auto;
 `;
 
 export const FormWrapper = styled.div`
