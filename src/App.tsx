@@ -6,11 +6,10 @@ import styled from 'styled-components';
 
 import Button, { DEPLOYED_NETWORK_ID } from './components/button/button';
 import { MessageForm } from './components/messageform';
-import { useMemoriesHook } from './hooks/use-memories-hook';
+import { MemoryMessage, useMemoriesHook } from './hooks/use-memories-hook';
 import { useVisibility } from './hooks/useVisibility';
 import { useWalletConnection } from './hooks/walletconnect';
 import { MemorialWallWrapper, StyledWrapper, Splash, FirstText, SecondText, ThirdText } from './styled';
-import { MemorialWall } from './types/contracts/MemwallAbi';
 
 export const StyledMemoryWrapper = styled.div`
   display: flex;
@@ -29,18 +28,17 @@ export const StyledMemoryWrapper = styled.div`
   }
 `
 
-export const ShowMemory = (memory:  MemorialWall.MemoryMessageStructOutput, index: number ) => { 
-  const { name, message, timestamp} = memory;
-  const date = new Date(timestamp.toNumber() * 1000);
+export const ShowMemory = (memory:  MemoryMessage, index: number ) => { 
+  const { name, message, timeStamp, author} = memory;
+  const date = new Date(Number(timeStamp) * 1000);
   const dateString = date.toLocaleDateString();
   const timeString = date.toLocaleTimeString();
   return (
-    <StyledMemoryWrapper title={message} key={index}>
+    <StyledMemoryWrapper title={`from ${author}`} key={index}>
       <h3>{message}</h3>
       <p>{name} ~ {dateString} {timeString}</p>
     </StyledMemoryWrapper>
   )
-
 }
 
 function App() {
@@ -49,21 +47,21 @@ function App() {
   const {memories, setMemory, loading, setProvider, carvingOnToWall, getMemories} = useMemoriesHook()
   const [contextualText, setContextualText] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
+
+  React.useEffect(() => {  if(!carvingOnToWall) {
+    getMemories()
+  }
+  }, [carvingOnToWall, getMemories])
   
   React.useEffect(() => {
     if(provider) { 
-      console.log('setting provider')
       setProvider(provider)
     }
-    
-    getMemories();
-     // eslint-disable-next-line
    }, [provider, wallet, connecting, setProvider])
 
 
   React.useEffect(() => {
-    console.log('did carving change?', carvingOnToWall)
-
+    
     setCanSubmit(false)
     if(!provider) {
       setContextualText('Connect your wallet to leave a message')
@@ -87,9 +85,6 @@ function App() {
   }, [loading, connectedChain, memories, wallet, provider, carvingOnToWall])
 
   const submit = (name: string, message: string, donation: string) => { 
-    console.log('submitting', name, message, donation);
-
-    console.log('can submit?', canSubmit)
     if(!canSubmit) {
       toast(contextualText)
       return

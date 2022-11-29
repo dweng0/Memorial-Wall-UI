@@ -60,7 +60,6 @@ export const initWeb3Onboard = init({
   },
   notify: {
     transactionHandler: transaction => {
-      console.log({ transaction })
       if (transaction.eventCode === 'txPool') {
         return {
           // autoDismiss set to zero will persist the notification until the user excuses it
