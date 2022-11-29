@@ -4,7 +4,15 @@ import { useContractInterface as contractInterface } from "./use-contract-interf
 import { MemwallAbi, MemwallAbi__factory } from "../types/contracts";
 import { MemorialWall } from "../types/contracts/MemwallAbi";
 const MEMORIAL_WALL_ADDRESS = "0x393b3442Df6E5AF57E0222343058A9Bff7F7dDcd";
-
+const byDate = (a: MemorialWall.MemoryMessageStructOutput, b: MemorialWall.MemoryMessageStructOutput) => {
+  if(a.timestamp.lt(b.timestamp)) {
+    return 1;
+  } else if(a.timestamp.gt(b.timestamp)) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
 interface MemoriesHook {
   loading: boolean;
   error: string;
@@ -29,6 +37,7 @@ export const useMemoriesHook = (): MemoriesHook => {
   const [error, setError] = React.useState<string>("");
   const [carvingOnToWall, setCarvingOnToWall] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
+
 
   const getContract = (signerOrProvider: string | ethers.providers.Provider | ethers.Signer) => { 
       if(!signerOrProvider) return;
@@ -80,14 +89,13 @@ export const useMemoriesHook = (): MemoriesHook => {
       await tx.wait();
       setCarvingOnToWall(false);
       setLoading(false);
-      getMemories();
+      _getMemories();
     } catch (error: any) {
       setLoading(false);
       setError(error.message);
     }
   };
-
-  const getMemories = async () => {
+  const _getMemories = async () => {
     console.log('fetching memories')
     let localProvider = provider;
     try {
@@ -95,24 +103,28 @@ export const useMemoriesHook = (): MemoriesHook => {
       if(!localProvider) { 
         localProvider = new ethers.providers.Web3Provider(window.ethereum);
       }
-      setMemories((await getContract(localProvider)?.getMemories()) || []);
+      const _memories = await getContract(localProvider)?.getMemories() || [];
+      console.log('got memories', _memories);
+      console.log('sorted memories', _memories.sort(byDate));
+      setMemories([..._memories.sort(byDate)]);
+      
       setLoading(false);
     } catch (error: any) {
       setError(error.message);
       setLoading(false);
     }
   };
+  const handleMemoryFetching = React.useCallback(() => {
+    return _getMemories
+  }, [_getMemories])
 
-  useEffect(() => { 
-    getMemories();
-  }, [getMemories])
   return {
     memories,
     loading,
     error,
     carvingOnToWall,
     setMemory,
-    getMemories,
+    getMemories:handleMemoryFetching(),
     setProvider
   };
 };

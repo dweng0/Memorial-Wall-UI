@@ -54,9 +54,12 @@ function App() {
     if(provider) { 
       console.log('setting provider')
       setProvider(provider)
-      getMemories()
     }
-   }, [provider, wallet, connecting, setProvider, getMemories])
+    
+    getMemories();
+     // eslint-disable-next-line
+   }, [provider, wallet, connecting, setProvider])
+
 
   React.useEffect(() => {
     console.log('did carving change?', carvingOnToWall)
